@@ -404,5 +404,5 @@ func main() {
 	http.HandleFunc("/log_out", log_out_function)
 
 	fmt.Println("Server: http://localhost:7777")
-	log.Fatal(http.ListenAndServe(":7776", nil))
+	log.Fatal(http.ListenAndServe(":7777", nil))
 }
