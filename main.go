@@ -224,37 +224,78 @@ func log_out_function(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, &cookie)
-	http.Redirect(w, r, "/login", http.StatusSeeOther)
+	http.Redirect(w, r, "/login/", http.StatusSeeOther)
 }
 
 func profile_page(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/profile/" {
-		http.Redirect(w, r, "/NotFound/", http.StatusSeeOther)
-		return
-	}
+    if r.URL.Path != "/profile/" {
+        http.Redirect(w, r, "/NotFound/", http.StatusSeeOther)
+        return
+    }
 
-	cookie, err := r.Cookie("user_session")
-	if err != nil {
-		http.Redirect(w, r, "/login/", http.StatusSeeOther)
-		return
-	}
+    cookie, err := r.Cookie("user_session")
+    if err != nil || cookie.Value == "" {
+        http.Redirect(w, r, "/login/", http.StatusSeeOther)
+        return
+    }
 
-	var currentUser User 
-	result := db.Where(&User{Name: cookie.Value}).First(&currentUser)
+    var currentUser User 
+    result := db.Where("name = ?", cookie.Value).First(&currentUser)
+    if result.Error != nil {
+        http.Redirect(w, r, "/login/", http.StatusSeeOther)
+        return
+    }
 
-	if result.Error != nil {
-		http.Redirect(w, r, "/login/", http.StatusSeeOther)
-		return
-	}
+    // Eigene Kommentare aus der Datenbank abfragen
+    var userComments []Comment
+    db.Where("user_id = ?", currentUser.ID).Order("created_at desc").Find(&userComments)
 
-	profile_tmpl, err := template.ParseFiles("public/profile.html")
-	if err != nil {
-		http.Error(w, "HTML not found", http.StatusSeeOther)
-		return
-	}
+    // Daten für das Template strukturieren
+    data := struct {
+        User     User
+        Comments []Comment
+    }{
+        User:     currentUser,
+        Comments: userComments,
+    }
 
-	profile_tmpl.Execute(w, currentUser)
+    profile_tmpl, err := template.ParseFiles("public/profile.html")
+    if err != nil {
+        http.Error(w, "HTML nicht gefunden", http.StatusInternalServerError)
+        return
+    }
 
+    profile_tmpl.Execute(w, data)
+}
+
+func delete_comment_function(w http.ResponseWriter, r *http.Request) {
+    if r.Method != http.MethodPost {
+        http.Redirect(w, r, "/profile/", http.StatusSeeOther)
+        return
+    }
+
+    cookie, err := r.Cookie("user_session")
+    if err != nil || cookie.Value == "" {
+        http.Redirect(w, r, "/login/", http.StatusSeeOther)
+        return
+    }
+
+    var currentUser User
+    if err := db.Where("name = ?", cookie.Value).First(&currentUser).Error; err != nil {
+        http.Redirect(w, r, "/login/", http.StatusSeeOther)
+        return
+    }
+
+    commentID := r.FormValue("comment_id")
+
+    // Sicherheitsprüfung: Nur eigene Kommentare dürfen gelöscht werden
+    result := db.Where("id = ? AND user_id = ?", commentID, currentUser.ID).Delete(&Comment{})
+    if result.Error != nil {
+        http.Error(w, "Fehler beim Löschen des Kommentars", http.StatusInternalServerError)
+        return
+    }
+
+    http.Redirect(w, r, "/profile/", http.StatusSeeOther)
 }
 
 func comment_page(w http.ResponseWriter, r *http.Request) {
@@ -351,6 +392,8 @@ func main() {
 	http.HandleFunc("/login/", login_page)
 	http.HandleFunc("/register/", register_page)
 	http.HandleFunc("/profile/", profile_page)
+	http.HandleFunc("/delete_comment", delete_comment_function)
+
 	http.HandleFunc("/comment/", comment_page)
 
 	http.HandleFunc("/register_action", register_function)
@@ -361,5 +404,5 @@ func main() {
 	http.HandleFunc("/log_out", log_out_function)
 
 	fmt.Println("Server: http://localhost:7777")
-	log.Fatal(http.ListenAndServe(":7777", nil))
+	log.Fatal(http.ListenAndServe(":7776", nil))
 }

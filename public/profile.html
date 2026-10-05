@@ -1,264 +1,251 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
-            --glass-bg: rgba(255, 255, 255, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.8);
-            --card-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08), 0 0 1px 1px rgba(255, 255, 255, 0.9) inset;
+            --bg-main: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
             
-            --primary: #3b82f6;
-            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            --primary-shadow: 0 8px 20px -4px rgba(59, 130, 246, 0.4);
+            --primary: #38bdf8;
+            --primary-hover: #0284c7;
             
-            --danger-bg: #fff1f2;
-            --danger-text: #e11d48;
-            --danger-border: #fecdd3;
-            --danger-gradient: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
-            --danger-shadow: 0 8px 20px -4px rgba(225, 29, 72, 0.35);
+            --danger: #f43f5e;
+            --danger-hover: #e11d48;
+            --danger-bg: rgba(244, 63, 94, 0.1);
 
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
+            --text-main: #f8fafc;
             --text-muted: #94a3b8;
+            --text-sub: #cbd5e1;
             
-            --radius-xl: 24px;
             --radius-lg: 16px;
-            --radius-md: 12px;
-            --radius-full: 9999px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
             
-            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.2s ease-in-out;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: var(--bg-gradient);
-            color: var(--text-primary);
+            background-color: var(--bg-main);
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
+        /* Top Navigation Bar: Name & ID NUR HIER oben */
         .top-bar {
             width: 100%;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(30, 41, 59, 0.85);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            border-bottom: 1px solid var(--card-border);
             position: sticky;
             top: 0;
             z-index: 100;
-            padding: 0.75rem 1.25rem;
-            box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.03);
+            padding: 0.75rem 1.5rem;
         }
 
         .header-container {
-            max-width: 500px;
+            max-width: 600px;
             margin: 0 auto;
             display: flex;
             align-items: center;
-            gap: 0.85rem;
+            gap: 1rem;
         }
 
         .avatar-link {
             text-decoration: none;
-            display: inline-block;
-            position: relative;
         }
 
         .avatar-circle {
-            width: 44px;
-            height: 44px;
-            border-radius: var(--radius-full);
-            background: var(--primary-gradient);
-            color: #ffffff;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #334155;
+            color: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: var(--primary-shadow);
+            border: 1px solid var(--card-border);
             transition: var(--transition);
         }
 
         .avatar-link:hover .avatar-circle {
-            transform: scale(1.06) rotate(-3deg);
+            background: var(--primary);
+            color: #0f172a;
         }
 
         .user-info-text {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            overflow: hidden;
         }
 
         .user-name-title {
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 700;
-            color: var(--text-primary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            color: var(--text-main);
             line-height: 1.2;
         }
 
         .user-id-title {
             font-size: 0.75rem;
-            color: var(--text-muted);
+            color: var(--primary);
             font-weight: 600;
-            letter-spacing: 0.02em;
             margin-top: 2px;
         }
 
+        /* Hauptbereich */
         .content {
             flex: 1;
-            padding: 1.5rem 1rem 2.5rem;
+            padding: 2rem 1rem;
             width: 100%;
-            max-width: 480px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .profile-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--card-shadow);
-            padding: 2rem 1.75rem;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Subtle decorative ambient lighting behind card */
-        .profile-card::before {
-            content: '';
-            position: absolute;
-            top: -50px;
-            right: -50px;
-            width: 120px;
-            height: 120px;
-            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(255,255,255,0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
 
         .card-header {
             display: flex;
             align-items: center;
-            margin-bottom: 1.75rem;
-            position: relative;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--card-border);
         }
 
         .back-btn {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: var(--radius-md);
-            background: #ffffff;
-            color: var(--text-secondary);
+            background: #0f172a;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            border: 1px solid rgba(226, 232, 240, 0.9);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--card-border);
             transition: var(--transition);
-            flex-shrink: 0;
         }
 
         .back-btn:hover {
-            background: var(--primary-gradient);
-            color: #ffffff;
-            border-color: transparent;
-            transform: translateX(-3px);
-            box-shadow: var(--primary-shadow);
-        }
-
-        .back-btn:active {
-            transform: translateX(-1px) scale(0.96);
+            color: var(--text-main);
+            border-color: var(--text-muted);
         }
 
         .card-title {
             font-size: 1.25rem;
-            color: var(--text-primary);
-            font-weight: 800;
-            text-align: center;
-            flex: 1;
-            margin-right: 40px;
-            letter-spacing: -0.01em;
+            color: var(--text-main);
+            font-weight: 700;
         }
 
-        .info-group {
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            border-radius: var(--radius-lg);
-            padding: 1rem 1.15rem;
+        /* Kommentare Bereich */
+        .comments-section {
+            margin-bottom: 1.75rem;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-sub);
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            gap: 0.85rem;
+            justify-content: space-between;
+        }
+
+        .comment-count-badge {
+            font-size: 0.75rem;
+            background: #0f172a;
+            color: var(--text-muted);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .comment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.9rem 1.1rem;
+            background: #0f172a;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
             transition: var(--transition);
         }
 
-        .info-group:hover {
-            background: #ffffff;
-            border-color: rgba(59, 130, 246, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px -3px rgba(0, 0, 0, 0.04);
+        .comment-item:hover {
+            border-color: #475569;
         }
 
-        .info-icon-wrapper {
-            width: 38px;
-            height: 38px;
-            border-radius: var(--radius-md);
-            background: #f1f5f9;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .info-content {
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+        .comment-text {
+            font-size: 0.92rem;
+            color: var(--text-sub);
+            line-height: 1.4;
+            word-break: break-word;
             flex: 1;
         }
 
-        .info-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
+        .btn-delete {
+            background: transparent;
             color: var(--text-muted);
-            font-weight: 700;
-            margin-bottom: 0.15rem;
+            border: none;
+            padding: 0.4rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
         }
 
-        .info-value {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            word-break: break-word;
+        .btn-delete:hover {
+            color: var(--danger);
+            background: var(--danger-bg);
         }
 
+        .empty-comments {
+            padding: 2.5rem 1rem;
+            text-align: center;
+            background: #0f172a;
+            border: 1px dashed var(--card-border);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Aktions-Buttons */
         .actions-group {
             display: flex;
             flex-direction: column;
-            gap: 0.85rem;
-            margin-top: 1.75rem;
+            gap: 0.75rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--card-border);
         }
 
         .actions-group form {
@@ -267,78 +254,53 @@
 
         .btn {
             width: 100%;
-            padding: 0.9rem 1.25rem;
+            padding: 0.85rem 1rem;
             border: none;
-            border-radius: var(--radius-lg);
-            font-size: 0.95rem;
-            font-weight: 700;
+            border-radius: var(--radius-md);
+            font-size: 0.92rem;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.6rem;
+            gap: 0.5rem;
             transition: var(--transition);
             text-decoration: none;
-            letter-spacing: 0.01em;
         }
 
         .btn-primary {
-            background: var(--primary-gradient);
-            color: #ffffff;
-            box-shadow: var(--primary-shadow);
+            background: var(--primary);
+            color: #0f172a;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px -6px rgba(59, 130, 246, 0.5);
-            filter: brightness(1.05);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .btn-danger {
-            background: var(--danger-bg);
-            color: var(--danger-text);
-            border: 1px solid var(--danger-border);
-        }
-
-        .btn-danger:hover {
-            background: var(--danger-gradient);
+            background: var(--primary-hover);
             color: #ffffff;
-            border-color: transparent;
-            box-shadow: var(--danger-shadow);
-            transform: translateY(-2px);
         }
 
-        .btn-danger:active {
-            transform: translateY(0);
+        .btn-danger-outline {
+            background: transparent;
+            color: var(--danger);
+            border: 1px solid rgba(244, 63, 94, 0.4);
         }
 
-        /* SVG Global Vector Formatting */
+        .btn-danger-outline:hover {
+            background: var(--danger);
+            color: #ffffff;
+            border-color: var(--danger);
+        }
+
         .icon {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             fill: currentColor;
             flex-shrink: 0;
-        }
-
-        @media (min-width: 640px) {
-            .content {
-                padding: 3.5rem 1rem;
-            }
-            .profile-card {
-                padding: 2.5rem 2.25rem;
-            }
-            .card-title {
-                font-size: 1.35rem;
-            }
         }
     </style>
 </head>
 <body>
 
+    <!-- OBERE LEISTE: Nur hier stehen Name & ID -->
     <header class="top-bar">
         <div class="header-container">
             <a class="avatar-link" href="/" title="Go to Home">
@@ -348,8 +310,8 @@
             </a>
 
             <div class="user-info-text">
-                <div class="user-name-title">{{.Name}}</div>
-                <div class="user-id-title">ID: {{.ID}}</div>
+                <div class="user-name-title">{{.User.Name}}</div>
+                <div class="user-id-title">ID: {{.User.ID}}</div>
             </div>
         </div>
     </header>
@@ -361,41 +323,52 @@
                 <a href="/" class="back-btn" title="Back">
                     <svg class="icon" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
                 </a>
-                <h2 class="card-title">Profile Details</h2>
+                <h2 class="card-title">Meine Kommentare</h2>
             </div>
 
-            <div class="info-group">
-                <div class="info-icon-wrapper">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <!-- Liste der geschriebenen Kommentare -->
+            <div class="comments-section">
+                <div class="section-title">
+                    <span>Verfasste Beiträge</span>
+                    <span class="comment-count-badge">{{len .Comments}} / 5</span>
                 </div>
-                <div class="info-content">
-                    <div class="info-label">Full Name</div>
-                    <div class="info-value">{{.Name}}</div>
-                </div>
+
+                {{if .Comments}}
+                    <div class="comments-list">
+                        {{range .Comments}}
+                            <div class="comment-item">
+                                <p class="comment-text">{{.Text}}</p>
+                                <form action="/delete_comment" method="POST">
+                                    <input type="hidden" name="comment_id" value="{{.ID}}">
+                                    <button type="submit" class="btn-delete" title="Kommentar löschen">
+                                        <svg class="icon" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                    </button>
+                                </form>
+                            </div>
+                        {{end}}
+                    </div>
+                {{else}}
+                    <div class="empty-comments">
+                        Du hast noch keine Kommentare verfasst.
+                    </div>
+                {{end}}
             </div>
 
-            <div class="info-group">
-                <div class="info-icon-wrapper">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM17 8H7v2h10V8zm0 4H7v2h10v-2zm-4 4H7v2h6v-2z"/></svg>
-                </div>
-                <div class="info-content">
-                    <div class="info-label">User ID</div>
-                    <div class="info-value">{{.ID}}</div>
-                </div>
-            </div>
-
+            <!-- Aktions-Buttons -->
             <div class="actions-group">
-                <form action="/comment" method="GET">
+                <!-- Button führt zur comment.html Seite -->
+                <form action="/comment/" method="GET">
                     <button type="submit" class="btn btn-primary">
-                        <svg class="icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
-                        Add Comment
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        Neuen Kommentar schreiben
                     </button>
                 </form>
 
+                <!-- Button zum Verlassen / Logout -->
                 <form action="/log_out" method="POST">
-                    <button type="submit" class="btn btn-danger">
+                    <button type="submit" class="btn btn-danger-outline">
                         <svg class="icon" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-                        Log Out
+                        Account verlassen (Abmelden)
                     </button>
                 </form>
             </div>
