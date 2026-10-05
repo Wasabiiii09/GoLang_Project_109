@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: zara_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: zaradb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432" # <-- Hier 5433 statt 5432 eintragen
+
+  web:
+    build: .
+    container_name: zara_app
+    restart: always
+    ports:
+      - "7777:7777"
+    environment:
+      DB_DSN: "host=db user=postgres password=mysecretpassword dbname=zaradb port=5432 sslmode=disable"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
